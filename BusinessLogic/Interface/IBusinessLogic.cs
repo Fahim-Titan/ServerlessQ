@@ -10,7 +10,8 @@ namespace BusinessLogic.Interface
 {
     public interface IBusinessLogic
     {
-        Task SaveData(string firstName, string lastName);
-        Task PublishData(Person data);
+        Task<Person> SaveData(string firstName, string lastName);
+        Task<bool> PublishData(Person data);
+        Task<Byte[]> GetSVG(Person person);
     }
 }
