@@ -10,5 +10,7 @@ namespace DataAccess.Interface
     public interface IRepository
     {
         Task<Person> SaveData(Person person);
+        Task<Person> GetPerson(int id);
+        Task<Person> SaveSvgData(Person person, string svg);
     }
 }
