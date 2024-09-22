@@ -7,13 +7,20 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using BusinessLogic.Interface;
 
 namespace ServerlessQ
 {
-    public static class Function1
+    public class Function1
     {
+        private readonly IBusinessLogic _logic;
+        public Function1(IBusinessLogic logic)
+        {
+            _logic = logic;
+        }
+
         [FunctionName("Function1")]
-        public static async Task<IActionResult> Run(
+        public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
         {
@@ -28,6 +35,12 @@ namespace ServerlessQ
             string responseMessage = string.IsNullOrEmpty(name)
                 ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
                 : $"Hello, {name}. This HTTP triggered function executed successfully.";
+
+            // TODO: call the business logic to save data
+            await _logic.SaveData("FirstName", "LastName");
+            // TODO: Get the data
+            // TODO: publish to the Azure Q
+
 
             return new OkObjectResult(responseMessage);
         }
