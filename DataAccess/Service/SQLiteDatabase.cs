@@ -30,7 +30,8 @@ namespace DataAccess.Service
                         CREATE TABLE IF NOT EXISTS Person (
                             Id INTEGER PRIMARY KEY AUTOINCREMENT,
                             FirstName TEXT NOT NULL,
-                            LastName TEXT NOT NULL
+                            LastName TEXT NOT NULL,
+                            Svg TEXT NULL
                         );
                     ";
                     command.ExecuteNonQuery();
