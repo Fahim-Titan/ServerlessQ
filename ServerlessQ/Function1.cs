@@ -26,21 +26,23 @@ namespace ServerlessQ
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            string name = req.Query["name"];
+            string firstName = req.Query["FirstName"];
+            string lastName = req.Query["LastName"];
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic data = JsonConvert.DeserializeObject(requestBody);
-            name = name ?? data?.name;
+            firstName = firstName ?? data?.firstName;
+            lastName = lastName ?? data?.lastName;
 
-            string responseMessage = string.IsNullOrEmpty(name)
+            string responseMessage = string.IsNullOrEmpty(firstName)
                 ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                : $"Hello, {name}. This HTTP triggered function executed successfully.";
+                : $"Hello, {firstName}. This HTTP triggered function executed successfully.";
 
             // TODO: call the business logic to save data
-            await _logic.SaveData("FirstName", "LastName");
+            var person = await _logic.SaveData(firstName, lastName);
             // TODO: Get the data
             // TODO: publish to the Azure Q
-
+            await _logic.PublishData(person);
 
             return new OkObjectResult(responseMessage);
         }
