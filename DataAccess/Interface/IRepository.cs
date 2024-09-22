@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Interface
 {
-    public interface IDataAccess
+    public interface IRepository
     {
         Task SaveData(Person person);
     }

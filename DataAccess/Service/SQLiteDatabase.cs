@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Service
 {
-    internal class SQLiteDatabase: IDataAccess
+    public class SQLiteDatabase: IRepository
     {
         private readonly string _databasePath;
         public SQLiteDatabase()
