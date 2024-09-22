@@ -16,25 +16,38 @@ namespace BusinessLogic.Service
         public Business(IRepository dataAccess, IMessageQueue messageQueue)
         {
             _repo = dataAccess;
+            _msgQueue = messageQueue;
         }
 
-        public Task PublishData(Person data)
+        public Task<byte[]> GetSVG(Person person)
         {
-            _msgQueue.SendMessage(data);
             throw new NotImplementedException();
         }
 
-        public Task SaveData(string firstName, string lastName)
+        public async Task<Person> SaveData(string firstName, string lastName)
         {
             //TODO: add validation
 
             Person person = new Person();
             person.FirstName = firstName;
             person.LastName = lastName;
-            var dbData = _repo.SaveData(person);
-            
-            //TODO: Return result
-            throw new NotImplementedException();
+            var dbData = await _repo.SaveData(person);
+
+            return dbData;
+        }
+
+        public async Task<bool> PublishData(Person data)
+        {
+            try
+            {
+                await _msgQueue.SendMessage(data);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                //log here
+                return false;
+            }
         }
     }
 }
