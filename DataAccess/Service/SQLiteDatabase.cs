@@ -69,6 +69,47 @@ namespace DataAccess.Service
             }
         }
 
+        public async Task<Person> GetPersonByFirstAndLastName(string firstName, string lastName)
+        {
+            try
+            {
+                using (var connection = new SqliteConnection($"Data Source={_databasePath}"))
+                {
+                    await connection.OpenAsync();
+                    var command = connection.CreateCommand();
+                    command.CommandText = @"
+                        SELECT Id, FirstName, LastName, Svg
+                        FROM Person
+                        WHERE FirstName = @first AND LastName = @last;
+                    ";
+                    command.Parameters.AddWithValue("@first", firstName);
+                    command.Parameters.AddWithValue("@last", lastName);
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        if (await reader.ReadAsync())
+                        {
+                            var person = new Person
+                            {
+                                Id = reader.GetInt32(0),
+                                FirstName = reader.GetString(1),
+                                LastName = reader.GetString(2),
+                                Svg = reader.IsDBNull(3) ? string.Empty : reader.GetString(3)
+                            };
+                            return person;
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred in retrieving data from SQL DB", ex);
+            }
+        }
+
         public async Task<Person> GetPerson(int id)
         {
             try

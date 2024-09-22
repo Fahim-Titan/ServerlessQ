@@ -1,9 +1,11 @@
 ﻿using BusinessLogic.Interface;
 using DataAccess.Interface;
 using DataAccess.Model;
+using Microsoft.WindowsAzure.Storage.Blob.Protocol;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,14 +23,19 @@ namespace BusinessLogic.Service
             _httpClient = httpClient;
         }
 
-        public Task<byte[]> GetSVG(Person person)
+        private async Task<bool> IsNamePairUnique(string firstName, string lastName)
         {
-            throw new NotImplementedException();
+            var person = await _repo.GetPersonByFirstAndLastName(firstName, lastName);
+            return person == null ? true : false;   
         }
 
         public async Task<Person> SaveData(string firstName, string lastName)
         {
             //TODO: add validation
+            if (!await IsNamePairUnique(firstName, lastName))
+            {
+                throw new Exception("First name and Last Name pair is not unique"); ;
+            }
 
             Person person = new Person();
             person.FirstName = firstName;
