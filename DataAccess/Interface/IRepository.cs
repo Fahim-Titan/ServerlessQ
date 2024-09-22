@@ -9,6 +9,6 @@ namespace DataAccess.Interface
 {
     public interface IRepository
     {
-        Task SaveData(Person person);
+        Task<Person> SaveData(Person person);
     }
 }
