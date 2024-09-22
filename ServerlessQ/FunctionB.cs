@@ -23,7 +23,7 @@ namespace ServerlessQ
             try
             {
                 var svg = await _logic.GetSVG(person);
-                //await _logic.SaveSVG(person, svg);
+                await _logic.SaveSVG(person.Id, svg);
             }
             catch (Exception ex)
             {
