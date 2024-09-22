@@ -24,6 +24,7 @@ namespace ServerlessQ
             {
                 var svg = await _logic.GetSVG(person);
                 await _logic.SaveSVG(person.Id, svg);
+                log.LogInformation("SVG data is saved to the database");
             }
             catch (Exception ex)
             {
