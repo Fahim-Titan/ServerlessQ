@@ -17,22 +17,22 @@ This project is a C# Azure Functions-based solution demonstrating communication 
 
 ## Setup Instructions
 1. **Prerequisites**:
-   - Visual Studio 2019 or later.
+   - Visual Studio 2022 or later.
    - .NET Core SDK (3.1 or later).
    - Azure Functions Tools.
    - Azurite emulator for local Azure Storage emulation.
 
 2. **Clone the Repository**:
    ```bash
-   git clone <repository-url>
-   cd <repository-directory>
+   git clone https://github.com/Fahim-Titan/ServerlessQ.git
+   cd ServerlessQ
    ```
 3. Install Dependencies:
 
 	- Open the solution in Visual Studio.
 	- Restore NuGet packages for all projects.
 
-4. Make sure the Azurite is installed. 
+4. Make sure the Azurite is installed. Follow [this](https://learn.microsoft.com/en-us/azure/storage/common/storage-use-azurite?tabs=visual-studio%2Cblob-storage) document if not installed.
 5. Configure Local Settings:
 	- Update local.settings.json in the Functions project to configure Azure Storage and SQLite connection strings.
 	```json
@@ -47,6 +47,9 @@ This project is a C# Azure Functions-based solution demonstrating communication 
 6. Build and Run the Solution:
 	- Build the solution in Visual Studio.
 	- Run the solution locally to ensure Azurite and the Functions are correctly configured.
+7. Testing (optional):
+   	- It is not a prerequisite to run the project
+   	- To run the Unit test, Open Visual Studio, Go to test (at the top of the bar) and run all test. 
 
 ## How to Run
 
