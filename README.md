@@ -50,5 +50,51 @@ This project is a C# Azure Functions-based solution demonstrating communication 
 
 ## How to Run
 
-## Screenshots
+### Start Functions Locally
+
+1. Press F5 in Visual Studio to start the Functions project.
+2. Ensure Azurite is running in the background.
+
+### Trigger Function A
+
+Use a tool like Postman or CURL to send an HTTP POST request to Function A:
+
+```cURL
+curl --location 'http://localhost:7090/api/Function1?FirstName=John&LastName=Doe'
+```
+
+
+### Verify Results
+
+1. Verify that a 200 OK response is returned.
+2. Check that the message is published to the queue.
+3. Verify Function B Execution:
+   - Check the console logs to confirm that Function B has processed the queue message.
+   - Verify that the SVG response was saved correctly.
+
+
+## Screenshot
+
+### 1. Successful Database Save Operation
+This screenshot shows a `200 OK` response for a successful save operation.
+
+![200 Success Save Operation](Screenshots/200_success.jpg)
+
+
+### 2. Command Line Output for Success
+Command-line output showing successful execution of the function.
+
+![200 Success Command Line](Screenshots/200_success_cmd.jpg)
+
+### 3. Error Response for Duplicate Names
+This screenshot shows a `400` error response indicating a duplicate `FirstName` and `LastName` pair.
+
+![400 Error for Duplicate Names](Screenshots/400_repeat.jpg)
+
+### 4. Success Response for Unique Name Pair
+This screenshot shows a successful response when a unique `FirstName` and `LastName` pair is provided. Even though the `FirstName` is common.
+
+![200 Success for Unique Name Pair](Screenshots/200_for_unique_pair.jpg)
+
+
 
