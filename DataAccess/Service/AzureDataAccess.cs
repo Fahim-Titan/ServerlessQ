@@ -8,11 +8,10 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Service
 {
-    internal class AzureDataAccess: IDataAccess
+    public class AzureDataAccess: IMessageQueue
     {
         public AzureDataAccess() { }
-
-        public Task SaveData(Person person)
+        public Task SendMessage(Person person)
         {
             throw new NotImplementedException();
         }
