@@ -31,7 +31,8 @@ namespace ServerlessQ
                 var repo = sp.GetService<IRepository>();
                 var msgQueue = sp.GetService<IMessageQueue>();
                 var httpClient = new HttpClient();
-                return new Business(repo, msgQueue, httpClient);
+                string apiUrl = "https://tagdiscovery.com/api/get-initials?name=";
+                return new Business(repo, msgQueue, httpClient, apiUrl);
             });
         }
     }

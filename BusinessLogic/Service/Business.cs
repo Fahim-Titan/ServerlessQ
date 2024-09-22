@@ -16,11 +16,14 @@ namespace BusinessLogic.Service
         private readonly IRepository _repo;
         private readonly IMessageQueue _msgQueue;
         private readonly HttpClient _httpClient;
-        public Business(IRepository dataAccess, IMessageQueue messageQueue, HttpClient httpClient)
+        private readonly string ApiUrl;
+        public Business(IRepository dataAccess, IMessageQueue messageQueue, HttpClient httpClient, string apiUrl)
         {
             _repo = dataAccess;
             _msgQueue = messageQueue;
             _httpClient = httpClient;
+            ApiUrl = apiUrl;
+
         }
 
         private async Task<bool> IsNamePairUnique(string firstName, string lastName)
@@ -64,7 +67,7 @@ namespace BusinessLogic.Service
             try
             {
                 var fullName = $"{person.FirstName}{person.LastName}";
-                var response = await _httpClient.GetAsync($"https://tagdiscovery.com/api/get-initials?name={fullName}");
+                var response = await _httpClient.GetAsync($"{ApiUrl}{fullName}");
                 response.EnsureSuccessStatusCode();
                 var svg = await response.Content.ReadAsStringAsync();
                 return svg;
