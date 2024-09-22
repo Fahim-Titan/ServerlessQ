@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -29,7 +30,8 @@ namespace ServerlessQ
             {
                 var repo = sp.GetService<IRepository>();
                 var msgQueue = sp.GetService<IMessageQueue>();
-                return new Business(repo, msgQueue);
+                var httpClient = new HttpClient();
+                return new Business(repo, msgQueue, httpClient);
             });
         }
     }

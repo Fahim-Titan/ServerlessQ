@@ -13,10 +13,12 @@ namespace BusinessLogic.Service
     {
         private readonly IRepository _repo;
         private readonly IMessageQueue _msgQueue;
-        public Business(IRepository dataAccess, IMessageQueue messageQueue)
+        private readonly HttpClient _httpClient;
+        public Business(IRepository dataAccess, IMessageQueue messageQueue, HttpClient httpClient)
         {
             _repo = dataAccess;
             _msgQueue = messageQueue;
+            _httpClient = httpClient;
         }
 
         public Task<byte[]> GetSVG(Person person)
