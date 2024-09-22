@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+[assembly: FunctionsStartup(typeof(ServerlessQ.Startup))]
 namespace ServerlessQ
 {
     public class Startup : FunctionsStartup
@@ -17,7 +18,13 @@ namespace ServerlessQ
         public override void Configure(IFunctionsHostBuilder builder)
         {
             builder.Services.AddSingleton<IRepository, SQLiteDatabase>();
-            builder.Services.AddSingleton<IMessageQueue, AzureDataAccess>();
+            //TODO: Move the connection string to the env
+            builder.Services.AddSingleton<IMessageQueue>(sp =>
+            {
+                var connectionString = "UseDevelopmentStorage=true";
+                var queueName = "my-queue";
+                return new AzureDataAccess(connectionString, queueName);
+            });
             builder.Services.AddSingleton<IBusinessLogic>(sp =>
             {
                 var repo = sp.GetService<IRepository>();
