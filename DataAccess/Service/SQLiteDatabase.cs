@@ -60,6 +60,7 @@ namespace DataAccess.Service
                     command.Parameters.AddWithValue("@LastName", person.LastName);
                     var result = await command.ExecuteScalarAsync();
                     person.Id = Convert.ToInt32(result);
+                    person.Svg = string.Empty;
                     return person;
                 }
             }
@@ -69,7 +70,7 @@ namespace DataAccess.Service
             }
         }
 
-        public async Task<Person> GetPersonByFirstAndLastName(string firstName, string lastName)
+        public async Task<Person?> GetPersonByFirstAndLastName(string firstName, string lastName)
         {
             try
             {
