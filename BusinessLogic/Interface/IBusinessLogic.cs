@@ -12,6 +12,7 @@ namespace BusinessLogic.Interface
     {
         Task<Person> SaveData(string firstName, string lastName);
         Task<bool> PublishData(Person data);
-        Task<Byte[]> GetSVG(Person person);
+        Task<string> GetSVG(Person person);
+        Task<bool> SaveSVG(int personId, string svg);
     }
 }

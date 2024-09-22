@@ -49,5 +49,41 @@ namespace BusinessLogic.Service
                 return false;
             }
         }
+
+        public async Task<string> GetSVG(Person person)
+        {
+            try
+            {
+                var fullName = $"{person.FirstName}{person.LastName}";
+                var response = await _httpClient.GetAsync($"https://tagdiscovery.com/api/get-initials?name={fullName}");
+                response.EnsureSuccessStatusCode();
+                var svg = await response.Content.ReadAsStringAsync();
+                return svg;
+            }
+            catch (Exception ex)
+            {
+                // add logger
+                throw new Exception("Error Occured in API request to fetch svg data", ex);
+            }
+        }
+
+        public async Task<bool> SaveSVG(int personId, string svg)
+        {
+            try
+            {
+                var person = await _repo.GetPerson(personId);
+                if(person == null)
+                {
+                    throw new Exception("Can not find the person with the given ID value");
+                }
+                var result = await _repo.SaveSvgData(person, svg);
+                return result == null ? false : true;
+            }
+            catch (Exception ex)
+            {
+                // add logger
+                throw;
+            }
+        }
     }
 }
