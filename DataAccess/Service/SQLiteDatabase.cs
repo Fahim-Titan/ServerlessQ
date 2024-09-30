@@ -43,30 +43,43 @@ namespace DataAccess.Service
             }
         }
 
+        private SqliteConnection CreateConnection()
+        {
+            return new SqliteConnection($"Data Source={_databasePath}");
+        }
+
+        private async Task<int> InsertPersonAsync(SqliteConnection connection, Person person)
+        {
+            var command = connection.CreateCommand();
+            command.CommandText = @"
+                INSERT INTO Person (FirstName, LastName)
+                VALUES (@FirstName, @LastName);
+                SELECT last_insert_rowid();
+            ";
+            command.Parameters.AddWithValue("@FirstName", person.FirstName);
+            command.Parameters.AddWithValue("@LastName", person.LastName);
+            
+            var result = await command.ExecuteScalarAsync();
+            return Convert.ToInt32(result);
+        }
+
         public async Task<Person> SaveData(Person person)
         {
             try
             {
-                using (var connection = new SqliteConnection($"Data Source={_databasePath}"))
+                using (var connection = CreateConnection())
                 {
                     await connection.OpenAsync();
-                    var command = connection.CreateCommand();
-                    command.CommandText = @"
-                        INSERT INTO Person (FirstName, LastName)
-                        VALUES (@FirstName, @LastName);
-                        SELECT last_insert_rowid();
-                    ";
-                    command.Parameters.AddWithValue("@FirstName", person.FirstName);
-                    command.Parameters.AddWithValue("@LastName", person.LastName);
-                    var result = await command.ExecuteScalarAsync();
-                    person.Id = Convert.ToInt32(result);
+                    var personId = await InsertPersonAsync(connection, person);
+                    person.Id = personId;
                     person.Svg = string.Empty;
                     return person;
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occured in Saving data in SQL DB", ex);
+                // Consider logging the exception instead of wrapping and re-throwing it
+                throw;
             }
         }
 
