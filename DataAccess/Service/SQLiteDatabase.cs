@@ -83,6 +83,40 @@ namespace DataAccess.Service
             }
         }
 
+        private async Task<Person> GetPersonByIdAsync(SqliteConnection connection, int id)
+        {
+            var command = connection.CreateCommand();
+            command.CommandText = @"
+                SELECT Id, FirstName, LastName, Svg
+                FROM Person
+                WHERE Id = @Id;
+            ";
+            command.Parameters.AddWithValue("@Id", id);
+
+            using (var reader = await command.ExecuteReaderAsync())
+            {
+                if (await reader.ReadAsync())
+                {
+                    return MapReaderToPerson(reader);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
+        private Person MapReaderToPerson(SqliteDataReader reader)
+        {
+            return new Person
+            {
+                Id = reader.GetInt32(0),
+                FirstName = reader.GetString(1),
+                LastName = reader.GetString(2),
+                Svg = reader.IsDBNull(3) ? string.Empty : reader.GetString(3)
+            };
+        }
+
         public async Task<Person?> GetPersonByFirstAndLastName(string firstName, string lastName)
         {
             try
@@ -128,39 +162,16 @@ namespace DataAccess.Service
         {
             try
             {
-                using (var connection = new SqliteConnection($"Data Source={_databasePath}"))
+                using (var connection = CreateConnection())
                 {
                     await connection.OpenAsync();
-                    var command = connection.CreateCommand();
-                    command.CommandText = @"
-                        SELECT Id, FirstName, LastName, Svg
-                        FROM Person
-                        WHERE Id = @Id;
-                    ";
-                    command.Parameters.AddWithValue("@Id", id);
-                    using (var reader = await command.ExecuteReaderAsync())
-                    {
-                        if (await reader.ReadAsync())
-                        {
-                            var person = new Person
-                            {
-                                Id = reader.GetInt32(0),
-                                FirstName = reader.GetString(1),
-                                LastName = reader.GetString(2),
-                                Svg = reader.IsDBNull(3) ? string.Empty : reader.GetString(3)
-                            };
-                            return person;
-                        }
-                        else
-                        {
-                            return null;
-                        }
-                    }
+                    return await GetPersonByIdAsync(connection, id);
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred in retrieving data from SQL DB", ex);
+                // Consider logging the exception instead of wrapping and re-throwing it
+                throw;
             }
         }
 
